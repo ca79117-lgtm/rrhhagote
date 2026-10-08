@@ -1,135 +1,137 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>RRHH · Centro de Salud</title>
+<title>RRHH · CAPS N°4 Dr. Luis Agote</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#eef3f2;--fg:#10272b;--cd:#fbfdfc;--mu:#5f7377;--bd:#d7e2e0;--ac:#0e7c86;--ac2:#d9efec;--sb:#10272b;--btx:#fff;--rd:#c0392b;--gn:#1e8a4c;--am:#b7791f;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0b1618;--fg:#e4efee;--cd:#122326;--mu:#8fa6a9;--bd:#223a3e;--ac:#3fc1c9;--ac2:#17393d;--sb:#081012;--btx:#06191b;--rd:#ff8a7a;--gn:#5ad08a;--am:#f0b94d}}
-:root[data-theme="dark"]{--bg:#0b1618;--fg:#e4efee;--cd:#122326;--mu:#8fa6a9;--bd:#223a3e;--ac:#3fc1c9;--ac2:#17393d;--sb:#081012;--btx:#06191b;--rd:#ff8a7a;--gn:#5ad08a;--am:#f0b94d}
+:root{color-scheme:light;--bg:#fff;--fg:#111827;--cd:#fff;--mu:#5b6573;--bd:#dbe3ef;--ac:#1d5fd1;--ac2:#e8f0fe;--btx:#fff;--rd:#c62828;--gn:#1b7f43;--am:#a96500;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--fg);font:15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
-#shell{display:flex;min-height:100dvh}
-#sd{width:224px;flex:none;background:var(--sb);color:#e4efee;display:flex;flex-direction:column;padding:24px 0}
-.lg{padding:0 22px 24px}.lg b{font:600 21px/1.2 Fraunces,Georgia,serif;display:block}.lg small{color:#8fb0b3;font-size:13px}
-nav{display:flex;flex-direction:column}
-nav button{background:none;border:0;border-left:3px solid transparent;color:#a9c3c5;text-align:left;padding:10px 22px;font:inherit;cursor:pointer}
-nav button:hover{color:#fff}nav button.on{color:#fff;border-color:#5fd0d6;background:#ffffff14;font-weight:600}
-#out{margin:auto 22px 0;background:none;border:1px solid #ffffff30;color:#cfe3e4;border-radius:8px;padding:6px 10px;cursor:pointer;font:inherit}
-main{flex:1;min-width:0;padding:30px 36px 48px;max-width:1160px}body.lo #sd{display:none}
-@media(max-width:820px){#shell{flex-direction:column}#sd{width:auto;padding:12px 0 0;flex-direction:row;flex-wrap:wrap;align-items:center}.lg{padding:0 16px 8px}nav{flex-direction:row;overflow-x:auto;width:100%}nav button{border-left:0;border-bottom:3px solid transparent;padding:9px 14px;white-space:nowrap}nav button.on{border-color:#5fd0d6}#out{margin:0 16px 8px auto}main{padding:20px 16px}}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+#top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 32px;border-bottom:3px solid var(--ac)}
+#top h1{font:600 27px/1.15 Fraunces,Georgia,serif;margin:0;color:var(--ac)}#top p{margin:2px 0 0;color:var(--fg);font-weight:500}
+#out{background:none;border:1px solid var(--ac);color:var(--ac);border-radius:8px;padding:6px 12px;cursor:pointer;font:inherit}#out:hover{background:var(--ac2)}
+nav{display:flex;gap:2px;overflow-x:auto;padding:0 32px;border-bottom:1px solid var(--bd)}
+nav button{background:none;border:0;border-bottom:3px solid transparent;color:var(--fg);padding:12px 16px;font:inherit;cursor:pointer;white-space:nowrap}
+nav button:hover{color:var(--ac)}nav button.on{color:var(--ac);border-color:var(--ac);font-weight:600}
+main{padding:28px 32px 56px;max-width:1180px;margin:auto}
+@media(max-width:700px){#top,nav{padding-left:14px;padding-right:14px}main{padding:18px 14px}#top h1{font-size:22px}}
 .bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px}.bar h2{font:600 24px/1.2 Fraunces,Georgia,serif;margin:0;flex:1}
 input,select,textarea{background:var(--cd);color:var(--fg);border:1px solid var(--bd);border-radius:8px;padding:8px 10px;font:inherit;max-width:100%}
-.btn{background:var(--ac);color:var(--btx);border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;font-weight:600}
+.btn{background:var(--ac);color:var(--btx);border:0;border-radius:8px;padding:8px 14px;cursor:pointer;font:inherit;font-weight:600}.btn:hover{filter:brightness(1.1)}
 .btn.s{background:none;color:var(--fg);border:1px solid var(--bd);font-weight:500;padding:3px 9px;font-size:13px}.btn.s:hover{border-color:var(--ac);color:var(--ac)}
 .w{overflow-x:auto;background:var(--cd);border:1px solid var(--bd);border-radius:10px}
 table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
-th{font-size:13px;color:var(--mu);font-weight:500}tr:last-child td{border:0}tr:hover td{background:color-mix(in srgb,var(--ac2) 45%,transparent)}
+th{font-size:13px;color:var(--mu);font-weight:600;background:#f6f9ff}tr:last-child td{border:0}tr:hover td{background:#f6f9ff}tr.hoy td{background:var(--ac2)}
 .tag{padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid currentColor}.Aprobado{color:var(--gn)}.Rechazado{color:var(--rd)}.Pendiente{color:var(--am)}
-tr.al td{background:color-mix(in srgb,var(--rd) 12%,transparent)}
 .av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ac2);color:var(--ac);font-size:11px;font-weight:600;margin-right:8px}
-.kp{display:flex;gap:26px;flex-wrap:wrap;margin-bottom:16px}.kp div{border-left:3px solid var(--ac);padding:2px 14px;color:var(--mu)}.kp b{display:block;font:600 24px Fraunces,Georgia,serif;color:var(--fg)}
-.g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.g .h{font-size:13px;color:var(--mu);text-align:center}
-.d{background:var(--cd);border:1px solid var(--bd);border-radius:6px;min-height:80px;padding:4px;font-size:12px;overflow:hidden}.d b{color:var(--mu)}
-.c{display:block;background:var(--ac2);color:var(--ac);font-weight:600;border-radius:4px;padding:1px 5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.g .h{font-size:13px;color:var(--mu);text-align:center;font-weight:600}
+.d{background:var(--cd);border:1px solid var(--bd);border-radius:6px;min-height:84px;padding:4px;font-size:12px;overflow:hidden;cursor:pointer}.d:hover{border-color:var(--ac)}.d b{color:var(--mu)}
+.c{display:block;background:var(--ac2);color:var(--ac);font-weight:600;border-radius:4px;padding:1px 5px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.c.n{background:#fff3d6;color:#7a5200}
 #m{position:fixed;inset:0;background:#0008;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:20px}
-#m.on{display:flex}#m form{background:var(--cd);border-radius:12px;padding:20px;width:min(480px,100%)}#m form>b{font:600 19px Fraunces,Georgia,serif}
+#m.on{display:flex}#m form{background:var(--cd);border-radius:12px;padding:20px;width:min(500px,100%)}#m form>b{font:600 19px Fraunces,Georgia,serif;color:var(--ac)}
 label{display:block;font-size:13px;color:var(--mu);margin-top:10px}label input,label select,label textarea{width:100%;margin-top:3px;color:var(--fg)}
 .mu{color:var(--mu)}a{color:var(--ac)}
-#lg{max-width:340px;margin:60px auto;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:24px}#lg>b{font:600 22px Fraunces,Georgia,serif}
+#lg{max-width:340px;margin:60px auto;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:24px}#lg>b{font:600 22px Fraunces,Georgia,serif;color:var(--ac)}
 .big{font:500 clamp(24px,3.4vw,36px)/1.25 Fraunces,Georgia,serif;margin:4px 0 26px;max-width:26em}
 .st{display:flex;flex-wrap:wrap;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);margin-bottom:30px}
 .st button{flex:1;min-width:140px;background:none;border:0;border-left:1px solid var(--bd);padding:16px 18px;text-align:left;font:inherit;color:var(--mu);cursor:pointer}.st button:first-child{border-left:0}.st button:hover{background:var(--ac2)}
-.st b{display:block;font:600 28px Fraunces,Georgia,serif;color:var(--fg)}
+.st b{display:block;font:600 28px Fraunces,Georgia,serif;color:var(--ac)}
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:36px}.pn h3{font:600 18px Fraunces,Georgia,serif;margin:0 0 6px}
 .it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}.it small{display:block;color:var(--mu)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chip{background:var(--ac2);color:var(--ac);border:0;border-radius:99px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}
 </style></head><body>
-<div id="shell"><aside id="sd"><div class="lg"><b>Recursos Humanos</b><small>Centro de Salud</small></div><nav id="nv"></nav><button id="out" style="display:none" data-a="out">Cerrar sesión</button></aside><main id="app"><p class="mu">Cargando…</p></main></div><div id="m"></div>
+<header id="top"><div><h1>Recursos Humanos</h1><p>Centro de Salud Dr. Luis Agote (CAPS N°4)</p></div><button id="out" style="display:none" data-a="out">Cerrar sesión</button></header>
+<nav id="nv"></nav><main id="app"><p class="mu">Cargando…</p></main><div id="m"></div>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const T0=["Licencia Anual","Artículo N° 10","Artículo N° 105","Arreglo Interno","Licencia Complementaria","Permiso de Estudio","Permiso de Examen"];
-const D={empleados:[],licencias:[],caja:[],expedientes:[]};
-let anio=new Date().getFullYear(),db,assets,canW=true,tab="inicio",mes=new Date(),q="",fs="",ft="",ed=null;
-const tipos=()=>[...new Set([...T0,...D.licencias.map(l=>l.tipo).filter(Boolean)])],emp=id=>D.empleados.find(e=>e.id==id),eN=id=>{const e=emp(id);return e?e.apellido+", "+e.nombre:"—"};
+const T0=["Licencia ordinaria (vacaciones)","Licencia complementaria (estrés)","Artículo N° 10","Artículo N° 105","Arreglo interno","Permiso de estudio","Permiso de examen"];
+const D={empleados:[],licencias:[],notas:[]};
+let db,assets,canW=true,tab="inicio",mes=new Date(),q="",cq="",fs="",ft="",ed=null,fl={};
+const emp=id=>D.empleados.find(e=>e.id==id),eN=id=>{const e=emp(id);return e?e.apellido+", "+e.nombre:"—"};
+const tipos=()=>[...new Set([...T0,...D.licencias.map(l=>l.tipo).filter(Boolean)])];
 const fd=d=>d?d.split("-").reverse().join("/"):"",days=(a,b)=>a&&b?Math.round((new Date(b)-new Date(a))/864e5)+1:0,pad=n=>String(n).padStart(2,"0");
-const $$=v=>"$ "+Number(v||0).toLocaleString("es-AR");
+const col=k=>M[k].col||k,rowsOf=k=>M[k].src?D[col(k)].filter(M[k].src):D[col(k)];
+const isC=(l,n)=>String(l.codigo||"").replace(/^0+/,"")==String(n)||(n==6?/ordinaria|vacacion/i:/estr[eé]s|complementaria/i).test(l.tipo||"");
+const sug=k=>[...new Set([...D.licencias.map(l=>l[k]).filter(Boolean),...(k=="tipo"?T0:k=="codigo"?["06","16"]:[])])];
 // campo: [clave,etiqueta,tipo,obligatorio,opciones]
+const LF=[["emp","Empleado","emp",1],["codigo","Código de licencia (ej. 06, 16)","text",0,()=>sug("codigo")],["articulo","N° de artículo (escribilo libremente)","text",0,()=>sug("articulo")],["tipo","Tipo de licencia (escribilo libremente)","text",0,()=>sug("tipo")],["desde","Desde","date",1],["hasta","Hasta (opcional: si lo dejás vacío cuenta 1 día)","date"],["estado","Estado","select",0,["Pendiente","Aprobado","Rechazado"]],["obs","Observaciones","text"],["comp","Comprobante / certificado","file"]];
 const M={
-empleados:{t:"Empleados (legajo digital)",fl:["sector","estado","condicion"],c:["legajo","apellido","nombre","cargo","sector","estado"],s:(a,b)=>a.apellido>b.apellido?1:-1,f:[["legajo","Legajo","text",1],["dni","DNI","text",1],["apellido","Apellido","text",1],["nombre","Nombre","text",1],["cargo","Cargo","text"],["sector","Sector / área","text"],["ingreso","Fecha de ingreso","date"],["condicion","Condición contractual","select",0,["Planta permanente","Contratado","Residente","Suplente","Otra"]],["telefono","Teléfono","text"],["email","Email","text"],["estado","Estado","select",0,["Activo","Inactivo","Licencia prolongada"]],["vacdias","Días de vacaciones por año","number"],["docs","Documentación (contratos, título, DNI…)","file"]]},
-licencias:{t:"Licencias y permisos",fl:["emp","estado","tipo","articulo","mes"],c:["emp","articulo","tipo","desde","hasta","dias","estado","comp"],s:(a,b)=>a.desde<b.desde?1:-1,f:[["emp","Empleado","emp",1],["articulo","N° de artículo (escribilo libremente)","text",0,()=>sug("articulo")],["tipo","Tipo de licencia (escribilo libremente)","text",0,()=>sug("tipo")],["desde","Desde","date",1],["hasta","Hasta (opcional: si lo dejás vacío cuenta 1 día)","date"],["estado","Estado","select",0,["Pendiente","Aprobado","Rechazado"]],["obs","Observaciones","text"],["comp","Comprobante / certificado","file"]]},
-caja:{t:"Caja chica",fl:["tipo","categoria","responsable","mes"],c:["fecha","tipo","monto","categoria","concepto","responsable","comp"],s:(a,b)=>a.fecha<b.fecha?1:-1,f:[["fecha","Fecha","date",1],["tipo","Tipo","select",1,["Ingreso","Egreso"]],["monto","Monto","number",1],["categoria","Categoría","text"],["concepto","Concepto","text",1],["responsable","Responsable","text"],["comp","Comprobante (factura, ticket)","file"]]},
-expedientes:{t:"Expedientes judiciales y legales",fl:["estado","juzgado"],c:["nro","caratula","juzgado","estado","venc","docs"],s:(a,b)=>(a.venc||"9")>(b.venc||"9")?1:-1,f:[["nro","N° de expediente","text",1],["caratula","Carátula / asunto","text",1],["juzgado","Juzgado","text"],["estado","Estado","select",0,["En trámite","Con vencimiento","Resuelto","Archivado"]],["emp","Empleado vinculado","emp"],["inicio","Fecha de inicio","date"],["venc","Próximo vencimiento","date"],["obs","Observaciones","text"],["docs","Notificaciones / resoluciones","file"]]},
-};
-const L={inicio:"Inicio",empleados:"Empleados",licencias:"Licencias",calendario:"Calendario",vacaciones:"Vacaciones",caja:"Caja chica",expedientes:"Expedientes"};
-const of=f=>typeof f[4]=="function"?f[4]():f[4]||[],ms=(k,key)=>M[k].f.find(f=>f[0]==key)||[key,key=="dias"?"Días":key];
+empleados:{t:"Legajos del personal",fl:["sector","cargo","condicion","estado"],c:["legajo","apellido","nombre","dni","cargo","sector","condicion","estado"],s:(a,b)=>(a.apellido||"")>(b.apellido||"")?1:-1,f:[["legajo","Legajo","text",1],["apellido","Apellido","text",1],["nombre","Nombre","text",1],["dni","DNI","text",1],["cuil","CUIL","text"],["nacimiento","Fecha de nacimiento","date"],["domicilio","Domicilio","text"],["cp","Código postal","text"],["telefono","Teléfono","text"],["email","Email","text"],["cargo","Cargo","text"],["sector","Sector / área","text"],["condicion","Condición contractual","select",0,["Planta permanente","Contratado","Carrera médica"]],["carga","Carga horaria (ej. 30 hs semanales)","text"],["ingreso","Fecha de ingreso","date"],["matprov","Matrícula provincial (si corresponde)","text"],["matnac","Matrícula nacional (si corresponde)","text"],["estado","Estado","select",0,["Activo","Inactivo","Licencia prolongada"]],["obs","Observaciones","area"],["docs","Documentación (contratos, título, DNI…)","file"]]},
+licencias:{t:"Licencias y permisos",fl:["emp","estado","codigo","tipo","articulo","mes"],c:["emp","codigo","articulo","tipo","desde","hasta","dias","estado","comp"],s:(a,b)=>a.desde<b.desde?1:-1,f:LF},
+notas:{t:"Notas y reuniones",fl:["mes"],c:["fecha","titulo","detalle"],s:(a,b)=>(a.fecha||"9999")>(b.fecha||"9999")?1:-1,f:[["fecha","Fecha (opcional)","date"],["titulo","Título (ej. Reunión de equipo)","text",1],["detalle","Detalle","area"]]}};
+M.vacaciones={...M.licencias,t:"Vacaciones: licencia ordinaria (código 06)",col:"licencias",src:l=>isC(l,6),pre:{codigo:"06",tipo:"Licencia ordinaria (vacaciones)"},fl:["sector","emp","estado","mes"],c:["emp","sector","desde","hasta","dias","estado","comp"]};
+M.estres={...M.licencias,t:"Estrés: licencia complementaria (código 16)",col:"licencias",src:l=>isC(l,16),pre:{codigo:"16",tipo:"Licencia complementaria (estrés)"},fl:["sector","emp","estado","mes"],c:["emp","sector","desde","hasta","dias","estado","comp"]};
+const L={inicio:"Inicio",empleados:"Legajos",licencias:"Licencias",calendario:"Calendario",vacaciones:"Vacaciones",estres:"Estrés"};
+const of=f=>typeof f[4]=="function"?f[4]():f[4]||[],ms=(k,key)=>M[k].f.find(f=>f[0]==key)||[key,({dias:"Días",sector:"Sector"})[key]||key];
 function cell(f,v,r){const t=f[2];if(f[0]=="articulo")return v?esc(/^\d/.test(v)?"Art. "+v:v):"";if(f[0]=="estado"&&r&&"Pendiente Aprobado Rechazado".includes(v))return`<span class="tag ${v}">${v}</span>`;
-if(t=="emp")return av(v)+esc(eN(v));if(t=="date")return fd(v);if(t=="number")return $$(v);
+if(t=="emp")return av(v)+esc(eN(v));if(t=="date")return fd(v);
 if(t=="file")return(v||[]).map(x=>`<a href="#" data-f="${esc(x.id)}">📎 ${esc(x.n)}</a>`).join("<br>");return esc(v)}
-let fl={};const sug=k=>[...new Set([...D.licencias.map(l=>l[k]).filter(Boolean),...(k=="tipo"?T0:[])])];
 const lt=l=>[l.articulo&&(/^\d/.test(l.articulo)?"Art. "+l.articulo:l.articulo),l.tipo].filter(Boolean).join(" – ");
-const fv=(r,k)=>k=="mes"?String(r.desde||r.fecha||"").slice(0,7):r[k],FN={emp:"Empleado",estado:"Estado",tipo:"Tipo",articulo:"Artículo",mes:"Mes",sector:"Sector",condicion:"Contratación",categoria:"Categoría",responsable:"Responsable",juzgado:"Juzgado"},
+const fv=(r,k)=>k=="mes"?String(r.desde||r.fecha||"").slice(0,7):k=="sector"&&"emp"in r?emp(r.emp)?.sector:r[k],FN={emp:"Empleado",estado:"Estado",tipo:"Tipo",articulo:"Artículo",codigo:"Código",mes:"Mes",sector:"Sector",cargo:"Cargo",condicion:"Contratación"},
 fshow=(k,v)=>k=="emp"?eN(v):k=="mes"?v.split("-").reverse().join("/"):k=="articulo"&&/^\d/.test(v)?"Art. "+v:v,
 hay=(r,m)=>m.f.map(f=>f[2]=="emp"?eN(r[f[0]]):f[2]=="file"?"":r[f[0]]).join(" ").toLowerCase();
-function fbar(m){return`<div class="bar">${(m.fl||[]).map(k=>{const vs=[...new Set(D[tab].map(r=>fv(r,k)).filter(Boolean))].sort();return vs.length?`<select data-fl="${k}"><option value="">${FN[k]}: todos</option>${vs.map(v=>`<option value="${esc(v)}" ${fl[k]==v?"selected":""}>${esc(fshow(k,v))}</option>`).join("")}</select>`:""}).join("")}${Object.values(fl).some(Boolean)||q?`<button class="btn s" data-a="cl">Limpiar filtros</button>`:""}</div>`}
+function fbar(m){const rs=rowsOf(tab);return`<div class="bar">${(m.fl||[]).map(k=>{const vs=[...new Set(rs.map(r=>fv(r,k)).filter(Boolean))].sort();return vs.length?`<select data-fl="${k}"><option value="">${FN[k]}: todos</option>${vs.map(v=>`<option value="${esc(v)}" ${fl[k]==v?"selected":""}>${esc(fshow(k,v))}</option>`).join("")}</select>`:""}).join("")}${Object.values(fl).some(Boolean)||q?`<button class="btn s" data-a="cl">Limpiar filtros</button>`:""}</div>`}
 const av=id=>{const e=emp(id);return`<span class="av">${e?((e.apellido||"")[0]||"")+((e.nombre||"")[0]||""):"?"}</span>`};
 function home(){const hoy=new Date().toISOString().slice(0,10),act=D.empleados.filter(e=>e.estado!="Inactivo").length,pen=D.licencias.filter(l=>l.estado=="Pendiente"),ya=D.licencias.filter(l=>l.estado=="Aprobado"&&l.desde<=hoy&&hoy<=l.hasta),
-ven=D.expedientes.filter(x=>x.venc&&!["Resuelto","Archivado"].includes(x.estado)&&(new Date(x.venc)-Date.now())/864e5<=15).sort((a,b)=>a.venc>b.venc?1:-1),sal=D.caja.reduce((s,x)=>s+(x.tipo=="Ingreso"?x.monto:-x.monto),0);
-const fr=!D.empleados.length?"Todavía no hay datos cargados. Empezá por agregar al personal en Empleados.":"Hoy "+(ya.length?(ya.length==1?"hay 1 persona":"hay "+ya.length+" personas")+" de licencia":"no hay nadie de licencia")+(pen.length?" y "+(pen.length==1?"1 licencia espera":pen.length+" licencias esperan")+" tu aprobación.":".");
+vh=ya.filter(l=>isC(l,6)).length,eh=ya.filter(l=>isC(l,16)).length,nt=D.notas.filter(n=>n.fecha&&n.fecha>=hoy).sort((a,b)=>a.fecha>b.fecha?1:-1);
+const fr=!D.empleados.length?"Todavía no hay datos cargados. Empezá por agregar al personal en Legajos.":"Hoy "+(ya.length?(ya.length==1?"hay 1 persona":"hay "+ya.length+" personas")+" de licencia":"no hay nadie de licencia")+(pen.length?" y "+(pen.length==1?"1 licencia espera":pen.length+" licencias esperan")+" tu aprobación.":".");
 const st=(v,t,go)=>`<button data-t="${go}"><b>${v}</b>${t}</button>`,ls=(t,a,fn,vacio)=>`<section class="pn"><h3>${t}</h3>${a.length?a.slice(0,6).map(fn).join(""):`<p class="mu">${vacio}</p>`}</section>`;
 $("#app").innerHTML=`<p class="mu" style="margin:0">${new Date().toLocaleDateString("es-AR",{weekday:"long",day:"numeric",month:"long"})}</p><p class="big">${fr}</p>
-<div class="st">${st(act,"personal activo","empleados")}${st(pen.length,"licencias pendientes","licencias")}${st(ya.length,"de licencia hoy","calendario")}${st(ven.length,"vencimientos en 15 días","expedientes")}${st($$(sal),"saldo de caja chica","caja")}</div>
+<div class="st">${st(act,"personal activo","empleados")}${st(pen.length,"licencias pendientes","licencias")}${st(ya.length,"de licencia hoy","calendario")}${st(vh,"de vacaciones hoy (06)","vacaciones")}${st(eh,"por estrés hoy (16)","estres")}</div>
 <div class="two">${ls("Licencias para resolver",pen,l=>`<div class="it"><span>${av(l.emp)}${esc(eN(l.emp))}<small>${esc(lt(l))}, del ${fd(l.desde)} al ${fd(l.hasta)}</small></span><span style="white-space:nowrap"><button class="btn s" data-a="ok" data-i="${l.id}">Aprobar</button> <button class="btn s" data-a="no" data-i="${l.id}">Rechazar</button></span></div>`,"No hay licencias esperando respuesta.")}
-${ls("Vencimientos próximos",ven,x=>`<div class="it"><span>${esc(x.nro)}<small>${esc(x.caratula)}</small></span><span class="tag Pendiente">${fd(x.venc)}</span></div>`,"No hay vencimientos en los próximos 15 días.")}</div>`}
+${ls("Próximas notas y reuniones",nt,n=>`<div class="it"><span>${esc(n.titulo)}<small>${esc(n.detalle||"")}</small></span><span class="tag Pendiente">${fd(n.fecha)}</span></div>`,"No hay notas con fecha próxima.")}</div>`}
 function render(){$("#nv").innerHTML=Object.keys(L).map(k=>`<button data-t="${k}" class="${k==tab?"on":""}">${L[k]}</button>`).join("");
-if(tab=="inicio")return home();if(tab=="calendario")return cal();if(tab=="vacaciones")return vac();const m=M[tab],rows=[...D[tab]].sort(m.s).filter(r=>(!q||hay(r,m).includes(q.toLowerCase()))&&Object.entries(fl).every(([k,v])=>!v||fv(r,k)==v));
+if(tab=="inicio")return home();if(tab=="calendario")return cal();
+const m=M[tab],isL=col(tab)=="licencias",hs=new Date().toISOString().slice(0,10),rows=[...rowsOf(tab)].sort(m.s).filter(r=>(!q||hay(r,m).includes(q.toLowerCase()))&&Object.entries(fl).every(([k,v])=>!v||fv(r,k)==v));
 let h=`<div class="bar"><h2>${m.t}</h2><input id="q" placeholder="Buscar…" value="${esc(q)}">${canW?`<button class="btn" data-a="new">+ Agregar</button>`:""}</div>`;h+=fbar(m);
-if(tab=="caja"){const i=D.caja.filter(x=>x.tipo=="Ingreso").reduce((a,x)=>a+x.monto,0),e=D.caja.filter(x=>x.tipo=="Egreso").reduce((a,x)=>a+x.monto,0),by={};
-D.caja.forEach(x=>{const k=(x.fecha||"").slice(0,7);by[k]=(by[k]||0)+(x.tipo=="Ingreso"?x.monto:-x.monto)});
-h+=`<div class="kp"><div>Saldo<b>${$$(i-e)}</b></div><div>Ingresos<b>${$$(i)}</b></div><div>Egresos<b>${$$(e)}</b></div></div><div class="kp">${Object.keys(by).sort().reverse().slice(0,6).map(k=>`<div>${k.split("-").reverse().join("/")}<b>${$$(by[k])}</b></div>`).join("")}</div>`}
+if(m.src)h+=`<p class="mu">Las filas en celeste son personas que están de licencia hoy.</p>`;
 h+=`<div class="w"><table><tr>${m.c.map(k=>`<th>${ms(tab,k)[1]}</th>`).join("")}<th></th></tr>`;
-const hoy=Date.now();
-for(const r of rows){const al=tab=="expedientes"&&r.venc&&!["Resuelto","Archivado"].includes(r.estado)&&(new Date(r.venc)-hoy)/864e5<=7;
-h+=`<tr class="${al?"al":""}">${m.c.map(k=>`<td>${k=="dias"?r.dias:cell(ms(tab,k),r[k],r)}</td>`).join("")}<td style="white-space:nowrap">${canW?(tab=="licencias"&&r.estado!="Aprobado"?`<button class="btn s" data-a="ok" data-i="${r.id}">Aprobar</button> `:"")+(tab=="licencias"&&r.estado!="Rechazado"?`<button class="btn s" data-a="no" data-i="${r.id}">Rechazar</button> `:"")+`<button class="btn s" data-a="ed" data-i="${r.id}">Editar</button> <button class="btn s" data-a="del" data-i="${r.id}">Borrar</button>`:""}</td></tr>`}
-if(!rows.length)h+=`<tr><td colspan="9" class="mu">Sin registros.</td></tr>`;
+for(const r of rows){const on=m.src&&r.estado=="Aprobado"&&r.desde<=hs&&hs<=r.hasta;
+h+=`<tr class="${on?"hoy":""}">${m.c.map(k=>`<td>${k=="dias"?r.dias:k=="sector"?esc(emp(r.emp)?.sector||""):cell(ms(tab,k),r[k],r)}</td>`).join("")}<td style="white-space:nowrap">${canW?(isL&&r.estado!="Aprobado"?`<button class="btn s" data-a="ok" data-i="${r.id}">Aprobar</button> `:"")+(isL&&r.estado!="Rechazado"?`<button class="btn s" data-a="no" data-i="${r.id}">Rechazar</button> `:"")+`<button class="btn s" data-a="ed" data-i="${r.id}">Editar</button> <button class="btn s" data-a="del" data-i="${r.id}">Borrar</button>`:""}</td></tr>`}
+if(!rows.length)h+=`<tr><td colspan="10" class="mu">Sin registros.</td></tr>`;
 $("#app").innerHTML=h+"</table></div>";const qi=$("#q");if(qi&&q){qi.focus();qi.setSelectionRange(q.length,q.length)}}
-function cal(){const y=mes.getFullYear(),mo=mes.getMonth(),n=new Date(y,mo+1,0).getDate(),off=(new Date(y,mo,1).getDay()+6)%7,secs=[...new Set(D.empleados.map(e=>e.sector).filter(Boolean))].sort();
+function cal(){const y=mes.getFullYear(),mo=mes.getMonth(),n=new Date(y,mo+1,0).getDate(),off=(new Date(y,mo,1).getDay()+6)%7,secs=[...new Set(D.empleados.map(e=>e.sector).filter(Boolean))].sort(),cc=cq.toLowerCase();
+const okL=x=>x.estado=="Aprobado"&&(!fs||emp(x.emp)?.sector==fs)&&(!ft||x.tipo==ft)&&(!cc||(eN(x.emp)+" "+(x.tipo||"")).toLowerCase().includes(cc)),okN=x=>!cc||((x.titulo||"")+" "+(x.detalle||"")).toLowerCase().includes(cc);
 let h=`<div class="bar"><button class="btn s" data-a="pm">◀</button><h2 style="text-align:center">${mes.toLocaleDateString("es-AR",{month:"long",year:"numeric"})}</h2><button class="btn s" data-a="nm">▶</button>
+<input id="cq" placeholder="Buscar persona o nota…" value="${esc(cq)}">
 <select id="fs"><option value="">Todos los sectores</option>${secs.map(s=>`<option ${s==fs?"selected":""}>${esc(s)}</option>`).join("")}</select>
 <select id="ft"><option value="">Todos los tipos</option>${tipos().map(s=>`<option ${s==ft?"selected":""}>${esc(s)}</option>`).join("")}</select></div>
-<p class="mu">Se muestran automáticamente las licencias aprobadas.</p><div class="g">${"LMMJVSD".split("").map(x=>`<div class="h">${x}</div>`).join("")}${"<div></div>".repeat(off)}`;
-for(let d=1;d<=n;d++){const ds=`${y}-${pad(mo+1)}-${pad(d)}`;
-const l=D.licencias.filter(x=>x.estado=="Aprobado"&&x.desde<=ds&&ds<=x.hasta&&(!fs||emp(x.emp)?.sector==fs)&&(!ft||x.tipo==ft));
-h+=`<div class="d"><b>${d}</b>${l.map(x=>`<span class="c" title="${esc(eN(x.emp)+" – "+lt(x))}">${esc(eN(x.emp).split(",")[0])}</span>`).join("")}</div>`}
-$("#app").innerHTML=h+"</div>"}
-function vac(){const y=anio,a=y+"-01-01",z=y+"-12-31",sum=(id,st)=>D.licencias.filter(l=>l.emp==id&&/anual|vacacion/i.test(l.tipo||"")&&l.estado==st&&l.desde<=z&&l.hasta>=a).reduce((s,l)=>s+days(l.desde>a?l.desde:a,l.hasta<z?l.hasta:z),0);
-const rows=D.empleados.filter(e=>e.estado!="Inactivo").sort(M.empleados.s).map(e=>{const u=sum(e.id,"Aprobado"),p=sum(e.id,"Pendiente"),t=e.vacdias===""||e.vacdias==null?null:Number(e.vacdias);
-return`<tr><td>${esc(eN(e.id))}</td><td>${esc(e.legajo)}</td><td>${t==null?"<span class='mu'>sin cargar</span>":t}</td><td>${u}</td><td>${p||""}</td><td style="font-weight:600;color:${t!=null&&t-u<0?"var(--rd)":"inherit"}">${t==null?"—":t-u}</td></tr>`}).join("");
-$("#app").innerHTML=`<div class="bar"><button class="btn s" data-a="py">◀</button><h2 style="text-align:center">Saldo de vacaciones ${y}</h2><button class="btn s" data-a="ny">▶</button></div><p class="mu">Cuenta las licencias aprobadas cuyo tipo dice "anual" o "vacaciones". Los días que corresponden a cada persona se cargan en su ficha (Empleados).</p><div class="w"><table><tr><th>Empleado</th><th>Legajo</th><th>Días del año</th><th>Usados</th><th>Pendientes</th><th>Saldo</th></tr>${rows||"<tr><td colspan='6' class='mu'>Sin empleados.</td></tr>"}</table></div>`}
-function form(k,id){if(M[k].f.some(f=>f[2]=="emp"&&f[3])&&!D.empleados.length)return alert("Primero cargá al personal en la pestaña Empleados.");const m=M[k],r=id?D[k].find(x=>x.id==id):{estado:k=="licencias"?"Pendiente":undefined};ed={k,id};
+<p class="mu">Tocá un día (o su número) para agregar una nota o reunión. Tocá una licencia o una nota para modificarla.</p><div class="g">${"LMMJVSD".split("").map(x=>`<div class="h">${x}</div>`).join("")}${"<div></div>".repeat(off)}`;
+for(let d=1;d<=n;d++){const ds=`${y}-${pad(mo+1)}-${pad(d)}`,Ls=D.licencias.filter(x=>okL(x)&&x.desde<=ds&&ds<=x.hasta),Ns=D.notas.filter(x=>x.fecha==ds&&okN(x));
+h+=`<div class="d" data-a="nd" data-d="${ds}"><b>${d}</b>${Ls.map(x=>`<span class="c" data-a="edk" data-k="licencias" data-i="${x.id}" title="${esc(eN(x.emp)+" – "+lt(x))}">${esc(eN(x.emp).split(",")[0])}</span>`).join("")}${Ns.map(x=>`<span class="c n" data-a="edk" data-k="notas" data-i="${x.id}" title="${esc(x.titulo)}">${esc(x.titulo)}</span>`).join("")}</div>`}
+h+=`</div><div class="bar" style="margin-top:30px"><h2>Notas y reuniones</h2><button class="btn" data-a="nn">+ Agregar nota</button></div><div class="w"><table><tr><th>Fecha</th><th>Título</th><th>Detalle</th><th></th></tr>`;
+const ns=[...D.notas].filter(okN).sort(M.notas.s);
+h+=ns.map(x=>`<tr><td>${fd(x.fecha)||"—"}</td><td>${esc(x.titulo)}</td><td>${esc(x.detalle||"")}</td><td style="white-space:nowrap"><button class="btn s" data-a="edk" data-k="notas" data-i="${x.id}">Editar</button> <button class="btn s" data-a="dk" data-k="notas" data-i="${x.id}">Borrar</button></td></tr>`).join("")||`<tr><td colspan="4" class="mu">Todavía no hay notas.</td></tr>`;
+$("#app").innerHTML=h+"</table></div>";const c=$("#cq");if(cq&&c){c.focus();c.setSelectionRange(cq.length,cq.length)}}
+function form(k,id,pre){if(M[k].f.some(f=>f[2]=="emp"&&f[3])&&!D.empleados.length)return alert("Primero cargá al personal en la pestaña Legajos.");const m=M[k],r=id?D[col(k)].find(x=>x.id==id):{...(col(k)=="licencias"?{estado:"Pendiente"}:{}),...(m.pre||{}),...(pre||{})};ed={k,id};
 $("#m").innerHTML=`<form><b>${id?"Editar":"Nuevo"} · ${m.t}</b>${m.f.map(f=>{const v=r[f[0]]??"",t=f[2];let i;
 if(t=="select"||t=="emp"){const o=t=="emp"?D.empleados.map(e=>[e.id,eN(e.id)]):of(f).map(x=>[x,x]);i=`<select id="f_${f[0]}">${t=="emp"&&!f[3]?"<option value=''>—</option>":""}${o.map(x=>`<option value="${esc(x[0])}" ${x[0]==v?"selected":""}>${esc(x[1])}</option>`).join("")}</select>`}
 else if(t=="file")i=`<input id="f_${f[0]}" type="file" multiple>${(v||[]).length?`<div class="mu">Ya adjuntos: ${v.map(x=>esc(x.n)).join(", ")}</div>`:""}`;
-else i=`<input id="f_${f[0]}" type="${t}" value="${esc(v)}" ${t=="number"?'step="0.01"':""}${t=="text"&&f[4]?' placeholder="Escribí lo que quieras"':""}>${t=="text"&&f[4]&&of(f).length?`<div class="chips">${of(f).slice(0,14).map(x=>`<button type="button" class="chip" data-a="chip" data-k="${f[0]}" data-v="${esc(x)}">${esc(x)}</button>`).join("")}</div>`:""}`;
-return`<label>${f[1]}${f[3]?" *":""}${i}</label>`}).join("")}<div class="bar" style="margin-top:16px"><span style="flex:1"></span><button type="button" class="btn s" data-a="x">Cancelar</button><button type="button" class="btn" data-a="sv">Guardar</button></div></form>`;$("#m").classList.add("on")}
+else if(t=="area")i=`<textarea id="f_${f[0]}" rows="3">${esc(v)}</textarea>`;
+else i=`<input id="f_${f[0]}" type="${t}" value="${esc(v)}"${t=="text"&&f[4]?' placeholder="Escribí lo que quieras"':""}>${t=="text"&&f[4]&&of(f).length?`<div class="chips">${of(f).slice(0,14).map(x=>`<button type="button" class="chip" data-a="chip" data-k="${f[0]}" data-v="${esc(x)}">${esc(x)}</button>`).join("")}</div>`:""}`;
+return`<label>${f[1]}${f[3]?" *":""}${i}</label>`}).join("")}<div class="bar" style="margin-top:16px">${id?`<button type="button" class="btn s" data-a="fdel" style="color:var(--rd)">Borrar</button>`:""}<span style="flex:1"></span><button type="button" class="btn s" data-a="x">Cancelar</button><button type="button" class="btn" data-a="sv">Guardar</button></div></form>`;$("#m").classList.add("on")}
 async function save(){const{k,id}=ed,m=M[k],d={};
 for(const f of m.f){const el=$("#f_"+f[0]);
-if(f[2]=="file"){const old=(id&&D[k].find(x=>x.id==id)?.[f[0]])||[],nu=[];if(el.files.length&&!assets)return alert("No tenés permiso para subir archivos.");
+if(f[2]=="file"){const old=(id&&D[col(k)].find(x=>x.id==id)?.[f[0]])||[],nu=[];if(el.files.length&&!assets)return alert("No tenés permiso para subir archivos.");
 try{for(const fl of el.files){const u=await assets.upload(fl);nu.push({id:u.id,n:fl.name})}}catch(e){return alert("Error al subir archivo: "+(e.message||e.code))}d[f[0]]=[...old,...nu]}
 else{let v=el.value;if(f[2]=="number")v=v===""?null:Number(v);if(f[3]&&(v===""||v==null))return alert("Falta completar: "+f[1]);d[f[0]]=v}}
-if(k=="licencias"){if(!d.tipo&&!d.articulo)return alert("Escribí el N° de artículo o el tipo de licencia.");if(!d.hasta)d.hasta=d.desde;if(d.hasta<d.desde)return alert("'Hasta' no puede ser anterior a 'Desde'.");d.dias=days(d.desde,d.hasta)}
-try{id?await db.collection(k).doc(id).set(d):await db.collection(k).add(d);$("#m").classList.remove("on");render()}catch(e){alert("No se pudo guardar: "+(e.message||e.code))}}
+if(col(k)=="licencias"){if(!d.tipo&&!d.articulo&&!d.codigo)return alert("Escribí el código, el N° de artículo o el tipo de licencia.");if(!d.hasta)d.hasta=d.desde;if(d.hasta<d.desde)return alert("'Hasta' no puede ser anterior a 'Desde'.");d.dias=days(d.desde,d.hasta)}
+try{id?await db.collection(col(k)).doc(id).set(d):await db.collection(col(k)).add(d);$("#m").classList.remove("on");render()}catch(e){alert("No se pudo guardar: "+(e.message||e.code))}}
 document.addEventListener("click",async e=>{const fa=e.target.closest("[data-f]");if(fa){e.preventDefault();const{data}=await sb.storage.from("adjuntos").createSignedUrl(fa.dataset.f,120);if(data)window.open(data.signedUrl,"_blank");return}
 const b=e.target.closest("[data-a],[data-t]");if(!b)return;const a=b.dataset.a,i=b.dataset.i;
 if(b.dataset.t){tab=b.dataset.t;q="";fl={};return render()}
-if(a=="new")form(tab);else if(a=="ed")form(tab,i);else if(a=="x"){$("#m").classList.remove("on");render()}else if(a=="sv")save();
+if(a=="new")form(tab);else if(a=="ed")form(tab,i);else if(a=="edk")form(b.dataset.k,i);else if(a=="nd")form("notas",null,{fecha:b.dataset.d});else if(a=="nn")form("notas");
+else if(a=="x"){$("#m").classList.remove("on");render()}else if(a=="sv")save();
+else if(a=="fdel"){if(confirm("¿Borrar este registro?"))try{await db.collection(col(ed.k)).doc(ed.id).delete();$("#m").classList.remove("on");render()}catch(x){alert(x.message)}}
+else if(a=="dk"){if(confirm("¿Borrar este registro?"))db.collection(b.dataset.k).doc(i).delete().catch(x=>alert(x.message))}
 else if(a=="pm"){mes=new Date(mes.getFullYear(),mes.getMonth()-1,1);cal()}else if(a=="nm"){mes=new Date(mes.getFullYear(),mes.getMonth()+1,1);cal()}
-else if(a=="chip"){$("#f_"+b.dataset.k).value=b.dataset.v}else if(a=="cl"){fl={};q="";render()}else if(a=="py"){anio--;vac()}else if(a=="ny"){anio++;vac()}else if(a=="out"){await sb.auth.signOut();location.reload()}else if(a=="del"){if(confirm("¿Borrar este registro?"))db.collection(tab).doc(i).delete().catch(x=>alert(x.message))}
+else if(a=="chip"){$("#f_"+b.dataset.k).value=b.dataset.v}else if(a=="cl"){fl={};q="";render()}else if(a=="out"){await sb.auth.signOut();location.reload()}
+else if(a=="del"){if(confirm("¿Borrar este registro?"))db.collection(col(tab)).doc(i).delete().catch(x=>alert(x.message))}
 else if(a=="ok"||a=="no")db.collection("licencias").doc(i).update({estado:a=="ok"?"Aprobado":"Rechazado"}).catch(x=>alert(x.message))});
-document.addEventListener("input",e=>{if(e.target.id=="q"){q=e.target.value;render()}});
+document.addEventListener("input",e=>{if(e.target.id=="q"){q=e.target.value;render()}if(e.target.id=="cq"){cq=e.target.value;cal()}});
 document.addEventListener("change",e=>{if(e.target.dataset.fl!==undefined){fl[e.target.dataset.fl]=e.target.value;render()}if(e.target.id=="fs"){fs=e.target.value;cal()}if(e.target.id=="ft"){ft=e.target.value;cal()}});
-// ===== CONFIGURACIÓN: pegar los datos de tu proyecto de Supabase =====
+// ===== CONFIGURACIÓN DE SUPABASE =====
 const CFG={url:"https://duyqmfsqtppjxftilwlw.supabase.co",key:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1eXFtZnNxdHBwanhmdGlsd2x3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE0NjUzNDcsImV4cCI6MjEwNzA0MTM0N30.HKLS6LFb5yywVkE2AKu76sE4_zSubwTyex-slSAGiFQ"};
 const sb=supabase.createClient(CFG.url,CFG.key);
 const chk=async p=>{const x=await p;if(x.error)throw x.error};
@@ -137,10 +139,10 @@ const upd=async(id,p)=>{const{data,error}=await sb.from("registros").select("dat
 const T=k=>({onSnapshot(next,err){const go=async()=>{const{data,error}=await sb.from("registros").select("id,data").eq("col",k);if(error)return err&&err(error);next({docs:data.map(r=>({id:r.id,data:()=>r.data}))})};go();const ch=sb.channel("c-"+k).on("postgres_changes",{event:"*",schema:"public",table:"registros"},go).subscribe();return()=>sb.removeChannel(ch)},
 add:d=>chk(sb.from("registros").insert({col:k,data:d})),
 doc:id=>({set:d=>chk(sb.from("registros").update({data:d,updated_at:new Date().toISOString()}).eq("id",id)),update:p=>upd(id,p),delete:()=>chk(sb.from("registros").delete().eq("id",id))})});
-function login(){document.body.classList.add("lo");$("#nv").innerHTML="";$("#app").innerHTML=`<div id="lg"><b>Ingresar</b><label>Email<input id="em" type="email"></label><label>Contraseña<input id="pw" type="password"></label><p id="er" style="color:var(--rd)"></p><button class="btn" id="go" style="width:100%">Entrar</button></div>`;
+function login(){$("#nv").innerHTML="";$("#out").style.display="none";$("#app").innerHTML=`<div id="lg"><b>Ingresar</b><label>Email<input id="em" type="email"></label><label>Contraseña<input id="pw" type="password"></label><p id="er" style="color:var(--rd)"></p><button class="btn" id="go" style="width:100%">Entrar</button></div>`;
 const f=async()=>{const{error}=await sb.auth.signInWithPassword({email:$("#em").value.trim(),password:$("#pw").value});if(error)$("#er").textContent="Email o contraseña incorrectos.";else start()};
 $("#go").onclick=f;$("#pw").onkeydown=e=>{if(e.key=="Enter")f()}}
-function start(){document.body.classList.remove("lo");$("#out").style.display="";db={collection:T};
+function start(){$("#out").style.display="";db={collection:T};
 assets={upload:async fl=>{const p=crypto.randomUUID()+"-"+fl.name.replace(/[^\w.-]/g,"_"),{error}=await sb.storage.from("adjuntos").upload(p,fl);if(error)throw error;return{id:p}}};
 Object.keys(D).forEach(k=>db.collection(k).onSnapshot(s=>{D[k]=s.docs.map(d=>({id:d.id,...d.data()}));if(!$("#m").classList.contains("on"))render()},e=>console.error(k,e)));render()}
 (async()=>{try{const{data:{session}}=await sb.auth.getSession();session?start():login()}catch(e){$("#app").textContent="No se pudo iniciar: "+(e.message||e)}})();
