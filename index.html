@@ -5,7 +5,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{color-scheme:light;--bg:#fff;--fg:#111827;--cd:#fff;--mu:#5b6573;--bd:#dbe3ef;--ac:#1d5fd1;--ac2:#e8f0fe;--btx:#fff;--rd:#c62828;--gn:#1b7f43;--am:#a96500;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+:root{color-scheme:light;--bg:#e6f2fb;--fg:#111827;--cd:#fff;--mu:#4b5b6e;--bd:#b9d3ea;--ac:#0b4a8f;--ac2:#d3e6f8;--btx:#fff;--rd:#c62828;--gn:#1b7f43;--am:#a96500;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 *{box-sizing:border-box}html,body{margin:0}body{background:var(--bg);color:var(--fg);font:15px/1.5 Figtree,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
 button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,a:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
 #top{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:18px 32px;border-bottom:3px solid var(--ac)}
@@ -22,7 +22,7 @@ input,select,textarea{background:var(--cd);color:var(--fg);border:1px solid var(
 .btn.s{background:none;color:var(--fg);border:1px solid var(--bd);font-weight:500;padding:3px 9px;font-size:13px}.btn.s:hover{border-color:var(--ac);color:var(--ac)}
 .w{overflow-x:auto;background:var(--cd);border:1px solid var(--bd);border-radius:10px}
 table{border-collapse:collapse;width:100%}th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--bd);vertical-align:middle}
-th{font-size:13px;color:var(--mu);font-weight:600;background:#f6f9ff}tr:last-child td{border:0}tr:hover td{background:#f6f9ff}tr.hoy td{background:var(--ac2)}
+th{font-size:13px;color:var(--mu);font-weight:600;background:#eef6fd}tr:last-child td{border:0}tr:hover td{background:#eef6fd}tr.hoy td{background:var(--ac2)}
 .tag{padding:2px 10px;border-radius:99px;font-size:12px;font-weight:600;border:1px solid currentColor}.Aprobado{color:var(--gn)}.Rechazado{color:var(--rd)}.Pendiente{color:var(--am)}
 .av{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ac2);color:var(--ac);font-size:11px;font-weight:600;margin-right:8px}
 .g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.g .h{font-size:13px;color:var(--mu);text-align:center;font-weight:600}
@@ -45,7 +45,7 @@ label{display:block;font-size:13px;color:var(--mu);margin-top:10px}label input,l
 <nav id="nv"></nav><main id="app"><p class="mu">Cargando…</p></main><div id="m"></div>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const T0=["Licencia ordinaria (vacaciones)","Licencia complementaria (estrés)","Artículo N° 10","Artículo N° 105","Arreglo interno","Permiso de estudio","Permiso de examen"];
+const T0=["Licencia ordinaria (vacaciones)","Licencia complementaria (estrés)","Artículo N° 10","Artículo N° 105","Arreglo interno","Permiso de estudio","Permiso de examen","Carpeta médica"];
 const D={empleados:[],licencias:[],notas:[]};
 let db,assets,canW=true,tab="inicio",mes=new Date(),q="",cq="",fs="",ft="",ed=null,fl={};
 const emp=id=>D.empleados.find(e=>e.id==id),eN=id=>{const e=emp(id);return e?e.apellido+", "+e.nombre:"—"};
@@ -62,7 +62,12 @@ licencias:{t:"Licencias y permisos",fl:["emp","estado","codigo","tipo","articulo
 notas:{t:"Notas y reuniones",fl:["mes"],c:["fecha","titulo","detalle"],s:(a,b)=>(a.fecha||"9999")>(b.fecha||"9999")?1:-1,f:[["fecha","Fecha (opcional)","date"],["titulo","Título (ej. Reunión de equipo)","text",1],["detalle","Detalle","area"]]}};
 M.vacaciones={...M.licencias,t:"Vacaciones: licencia ordinaria (código 06)",col:"licencias",src:l=>isC(l,6),pre:{codigo:"06",tipo:"Licencia ordinaria (vacaciones)"},fl:["sector","emp","estado","mes"],c:["emp","sector","desde","hasta","dias","estado","comp"]};
 M.estres={...M.licencias,t:"Estrés: licencia complementaria (código 16)",col:"licencias",src:l=>isC(l,16),pre:{codigo:"16",tipo:"Licencia complementaria (estrés)"},fl:["sector","emp","estado","mes"],c:["emp","sector","desde","hasta","dias","estado","comp"]};
-const L={inicio:"Inicio",empleados:"Legajos",licencias:"Licencias",calendario:"Calendario",vacaciones:"Vacaciones",estres:"Estrés"};
+const isA=(l,n)=>{const re=new RegExp("(^|\\D)"+n+"(\\D|$)");return re.test(l.articulo||"")||(/art/i.test(l.tipo||"")&&re.test(l.tipo||""))};
+const mk=(t,src,pre)=>({...M.licencias,t,col:"licencias",src,pre,fl:["sector","emp","estado","mes"],c:["emp","sector","desde","hasta","dias","estado","comp"]});
+M.art10=mk("Artículo N° 10",l=>isA(l,10),{articulo:"10",tipo:"Artículo N° 10"});
+M.art105=mk("Artículo N° 105",l=>isA(l,105),{articulo:"105",tipo:"Artículo N° 105"});
+M.carpeta=mk("Carpeta médica",l=>/carpeta/i.test((l.tipo||"")+" "+(l.articulo||"")),{tipo:"Carpeta médica"});
+const L={inicio:"Inicio",empleados:"Legajos",licencias:"Licencias",calendario:"Calendario",vacaciones:"Vacaciones",estres:"Estrés",art10:"Art. 10",art105:"Art. 105",carpeta:"Carpeta médica"};
 const of=f=>typeof f[4]=="function"?f[4]():f[4]||[],ms=(k,key)=>M[k].f.find(f=>f[0]==key)||[key,({dias:"Días",sector:"Sector"})[key]||key];
 function cell(f,v,r){const t=f[2];if(f[0]=="articulo")return v?esc(/^\d/.test(v)?"Art. "+v:v):"";if(f[0]=="estado"&&r&&"Pendiente Aprobado Rechazado".includes(v))return`<span class="tag ${v}">${v}</span>`;
 if(t=="emp")return av(v)+esc(eN(v));if(t=="date")return fd(v);
