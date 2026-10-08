@@ -120,7 +120,7 @@ try{for(const fl of el.files){const u=await assets.upload(fl);nu.push({id:u.id,n
 else{let v=el.value;if(f[2]=="number")v=v===""?null:Number(v);if(f[3]&&(v===""||v==null))return alert("Falta completar: "+f[1]);d[f[0]]=v}}
 if(k=="licencias"){if(!d.tipo&&!d.articulo)return alert("Escribí el N° de artículo o el tipo de licencia.");if(!d.hasta)d.hasta=d.desde;if(d.hasta<d.desde)return alert("'Hasta' no puede ser anterior a 'Desde'.");d.dias=days(d.desde,d.hasta)}
 try{id?await db.collection(k).doc(id).set(d):await db.collection(k).add(d);$("#m").classList.remove("on");render()}catch(e){alert("No se pudo guardar: "+(e.message||e.code))}}
-document.addEventListener("click",async e=>{const fl=e.target.closest("[data-f]");if(fl){e.preventDefault();const{data}=await sb.storage.from("adjuntos").createSignedUrl(fl.dataset.f,120);if(data)window.open(data.signedUrl,"_blank");return}
+document.addEventListener("click",async e=>{const fa=e.target.closest("[data-f]");if(fa){e.preventDefault();const{data}=await sb.storage.from("adjuntos").createSignedUrl(fa.dataset.f,120);if(data)window.open(data.signedUrl,"_blank");return}
 const b=e.target.closest("[data-a],[data-t]");if(!b)return;const a=b.dataset.a,i=b.dataset.i;
 if(b.dataset.t){tab=b.dataset.t;q="";fl={};return render()}
 if(a=="new")form(tab);else if(a=="ed")form(tab,i);else if(a=="x"){$("#m").classList.remove("on");render()}else if(a=="sv")save();
