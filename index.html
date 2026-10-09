@@ -40,24 +40,28 @@ label{display:block;font-size:13px;color:var(--mu);margin-top:10px}label input,l
 .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:36px}.pn h3{font:600 18px Fraunces,Georgia,serif;margin:0 0 6px}
 .it{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)}.it small{display:block;color:var(--mu)}
 .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.chip{background:var(--ac2);color:var(--ac);border:0;border-radius:99px;padding:3px 10px;font:inherit;font-size:12px;cursor:pointer}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:16px}.card{background:var(--cd);border:1px solid var(--bd);border-radius:10px;padding:16px}.card .bar{margin-bottom:6px}.card .bar h3{flex:1;font:600 20px Fraunces,Georgia,serif;color:var(--ac);margin:0}
+.it2{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-top:1px solid var(--bd)}.it2 p{margin:2px 0 0;white-space:pre-wrap}
 </style></head><body>
 <header id="top"><div><h1>Recursos Humanos</h1><p>Centro de Salud Dr. Luis Agote (CAPS N°4)</p></div><button id="out" style="display:none" data-a="out">Cerrar sesión</button></header>
 <nav id="nv"></nav><main id="app"><p class="mu">Cargando…</p></main><div id="m"></div>
 <script>
 const $=s=>document.querySelector(s),esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const T0=["Licencia ordinaria (vacaciones)","Licencia complementaria (estrés)","Artículo N° 10","Artículo N° 105","Arreglo interno","Permiso de estudio","Permiso de examen","Carpeta médica"];
-const D={empleados:[],licencias:[],notas:[]};
+const T0=["Licencia ordinaria (vacaciones)","Licencia complementaria (estrés)","Artículo N° 10","Artículo N° 105","Arreglo interno","Permiso de estudio","Permiso de examen","Carpeta médica","Congreso"];
+const D={empleados:[],licencias:[],notas:[],arreglos:[]};
 let db,assets,canW=true,tab="inicio",mes=new Date(),q="",cq="",fs="",ft="",ed=null,fl={};
 const emp=id=>D.empleados.find(e=>e.id==id),eN=id=>{const e=emp(id);return e?e.apellido+", "+e.nombre:"—"};
 const tipos=()=>[...new Set([...T0,...D.licencias.map(l=>l.tipo).filter(Boolean)])];
 const fd=d=>d?d.split("-").reverse().join("/"):"",days=(a,b)=>a&&b?Math.round((new Date(b)-new Date(a))/864e5)+1:0,pad=n=>String(n).padStart(2,"0");
 const col=k=>M[k].col||k,rowsOf=k=>M[k].src?D[col(k)].filter(M[k].src):D[col(k)];
-const isC=(l,n)=>String(l.codigo||"").replace(/^0+/,"")==String(n)||(n==6?/ordinaria|vacacion/i:/estr[eé]s|complementaria/i).test(l.tipo||"");
+const RX={6:/ordinaria|vacacion/i,16:/estr[eé]s|complementaria/i,13:/estudio/i,9:/examen/i,15:/congreso/i};
+const isC=(l,n)=>String(l.codigo||"").replace(/^0+/,"")==String(n)||RX[n].test(l.tipo||"");
+let anio=new Date().getFullYear();const LIM=15;
 const sug=k=>[...new Set([...D.licencias.map(l=>l[k]).filter(Boolean),...(k=="tipo"?T0:k=="codigo"?["06","16"]:[])])];
 // campo: [clave,etiqueta,tipo,obligatorio,opciones]
 const LF=[["emp","Empleado","emp",1],["codigo","Código de licencia (ej. 06, 16)","text",0,()=>sug("codigo")],["articulo","N° de artículo (escribilo libremente)","text",0,()=>sug("articulo")],["tipo","Tipo de licencia (escribilo libremente)","text",0,()=>sug("tipo")],["desde","Desde","date",1],["hasta","Hasta (opcional: si lo dejás vacío cuenta 1 día)","date"],["estado","Estado","select",0,["Pendiente","Aprobado","Rechazado"]],["obs","Observaciones","text"],["comp","Comprobante / certificado","file"]];
 const M={
-empleados:{t:"Legajos del personal",fl:["sector","cargo","condicion","estado"],c:["legajo","apellido","nombre","dni","cargo","sector","condicion","estado"],s:(a,b)=>(a.apellido||"")>(b.apellido||"")?1:-1,f:[["legajo","Legajo","text",1],["apellido","Apellido","text",1],["nombre","Nombre","text",1],["dni","DNI","text",1],["cuil","CUIL","text"],["nacimiento","Fecha de nacimiento","date"],["domicilio","Domicilio","text"],["cp","Código postal","text"],["telefono","Teléfono","text"],["email","Email","text"],["cargo","Cargo","text"],["sector","Sector / área","text"],["condicion","Condición contractual","select",0,["Planta permanente","Contratado","Carrera médica"]],["carga","Carga horaria (ej. 30 hs semanales)","text"],["ingreso","Fecha de ingreso","date"],["matprov","Matrícula provincial (si corresponde)","text"],["matnac","Matrícula nacional (si corresponde)","text"],["estado","Estado","select",0,["Activo","Inactivo","Licencia prolongada"]],["obs","Observaciones","area"],["docs","Documentación (contratos, título, DNI…)","file"]]},
+empleados:{t:"Legajos del personal",fl:["sector","cargo","condicion","estado"],c:["legajo","apellido","nombre","dni","cargo","sector","condicion","estado","docs"],s:(a,b)=>(a.apellido||"")>(b.apellido||"")?1:-1,f:[["legajo","Legajo","text",1],["apellido","Apellido","text",1],["nombre","Nombre","text",1],["dni","DNI","text",1],["cuil","CUIL","text"],["nacimiento","Fecha de nacimiento","date"],["domicilio","Domicilio","text"],["cp","Código postal","text"],["telefono","Teléfono","text"],["email","Email","text"],["cargo","Cargo","text"],["sector","Sector / área","text"],["condicion","Condición contractual","select",0,["Planta permanente","Contratado","Carrera médica"]],["carga","Carga horaria (ej. 30 hs semanales)","text"],["ingreso","Fecha de ingreso","date"],["matprov","Matrícula provincial (si corresponde)","text"],["matnac","Matrícula nacional (si corresponde)","text"],["estado","Estado","select",0,["Activo","Inactivo","Licencia prolongada"]],["obs","Observaciones","area"],["docs","Documentación (contratos, título, DNI…)","file"]]},
 licencias:{t:"Licencias y permisos",fl:["emp","estado","codigo","tipo","articulo","mes"],c:["emp","codigo","articulo","tipo","desde","hasta","dias","estado","comp"],s:(a,b)=>a.desde<b.desde?1:-1,f:LF},
 notas:{t:"Notas y reuniones",fl:["mes"],c:["fecha","titulo","detalle"],s:(a,b)=>(a.fecha||"9999")>(b.fecha||"9999")?1:-1,f:[["fecha","Fecha (opcional)","date"],["titulo","Título (ej. Reunión de equipo)","text",1],["detalle","Detalle","area"]]}};
 M.vacaciones={...M.licencias,t:"Vacaciones: licencia ordinaria (código 06)",col:"licencias",src:l=>isC(l,6),pre:{codigo:"06",tipo:"Licencia ordinaria (vacaciones)"},fl:["sector","emp","estado","mes"],c:["emp","sector","desde","hasta","dias","estado","comp"]};
@@ -67,7 +71,13 @@ const mk=(t,src,pre)=>({...M.licencias,t,col:"licencias",src,pre,fl:["sector","e
 M.art10=mk("Artículo N° 10",l=>isA(l,10),{articulo:"10",tipo:"Artículo N° 10"});
 M.art105=mk("Artículo N° 105",l=>isA(l,105),{articulo:"105",tipo:"Artículo N° 105"});
 M.carpeta=mk("Carpeta médica",l=>/carpeta/i.test((l.tipo||"")+" "+(l.articulo||"")),{tipo:"Carpeta médica"});
-const L={inicio:"Inicio",empleados:"Legajos",licencias:"Licencias",calendario:"Calendario",vacaciones:"Vacaciones",estres:"Estrés",art10:"Art. 10",art105:"Art. 105",carpeta:"Carpeta médica"};
+M.estudio=mk("Estudio: permiso de estudio (código 13)",l=>isC(l,13),{codigo:"13",tipo:"Permiso de estudio"});
+M.examen=mk("Examen: permiso de examen (código 09)",l=>isC(l,9),{codigo:"09",tipo:"Permiso de examen"});
+M.congreso=mk("Congreso (código 15)",l=>isC(l,15),{codigo:"15",tipo:"Congreso"});
+M.arreglos={t:"Arreglo interno",c:[],s:(a,b)=>0,f:[["grupo","Grupo","select",1,["Médicos","Enfermeros","Administrativos"]],["emp","Empleado (opcional)","emp"],["texto","Arreglo interno (escribilo acá)","area",1]]};
+const L={inicio:"Inicio",empleados:"Legajos",licencias:"Licencias",calendario:"Calendario",vacaciones:"Vacaciones",estres:"Estrés",art10:"Art. 10",art105:"Art. 105",carpeta:"Carpeta médica",estudio:"Estudio",examen:"Examen",congreso:"Congreso",arreglo:"Arreglo interno"};
+const HL={docs:"Documentos",comp:"Comprobantes"};
+const filesHtml=k=>{const a=(ed&&ed.files&&ed.files[k])||[];return a.length?`<div class="mu" style="margin-top:6px">Archivos guardados (tocá para verlos; "Quitar" se aplica al guardar):</div>`+a.map((x,i)=>`<div class="it2" style="padding:4px 0"><a href="#" data-f="${esc(x.id)}">📎 ${esc(x.n)}</a><button type="button" class="btn s" data-a="rmf" data-k="${k}" data-n="${i}">Quitar</button></div>`).join(""):""};
 const of=f=>typeof f[4]=="function"?f[4]():f[4]||[],ms=(k,key)=>M[k].f.find(f=>f[0]==key)||[key,({dias:"Días",sector:"Sector"})[key]||key];
 function cell(f,v,r){const t=f[2];if(f[0]=="articulo")return v?esc(/^\d/.test(v)?"Art. "+v:v):"";if(f[0]=="estado"&&r&&"Pendiente Aprobado Rechazado".includes(v))return`<span class="tag ${v}">${v}</span>`;
 if(t=="emp")return av(v)+esc(eN(v));if(t=="date")return fd(v);
@@ -86,12 +96,19 @@ $("#app").innerHTML=`<p class="mu" style="margin:0">${new Date().toLocaleDateStr
 <div class="st">${st(act,"personal activo","empleados")}${st(pen.length,"licencias pendientes","licencias")}${st(ya.length,"de licencia hoy","calendario")}${st(vh,"de vacaciones hoy (06)","vacaciones")}${st(eh,"por estrés hoy (16)","estres")}</div>
 <div class="two">${ls("Licencias para resolver",pen,l=>`<div class="it"><span>${av(l.emp)}${esc(eN(l.emp))}<small>${esc(lt(l))}, del ${fd(l.desde)} al ${fd(l.hasta)}</small></span><span style="white-space:nowrap"><button class="btn s" data-a="ok" data-i="${l.id}">Aprobar</button> <button class="btn s" data-a="no" data-i="${l.id}">Rechazar</button></span></div>`,"No hay licencias esperando respuesta.")}
 ${ls("Próximas notas y reuniones",nt,n=>`<div class="it"><span>${esc(n.titulo)}<small>${esc(n.detalle||"")}</small></span><span class="tag Pendiente">${fd(n.fecha)}</span></div>`,"No hay notas con fecha próxima.")}</div>`}
+const dY=(l,y)=>{const a=y+"-01-01",z=y+"-12-31";return l.desde<=z&&l.hasta>=a?days(l.desde>a?l.desde:a,l.hasta<z?l.hasta:z):0};
+function resEst(){const y=anio,qq=q.toLowerCase(),ls=rowsOf("estudio"),sm=(id,st)=>ls.filter(l=>l.emp==id&&l.estado==st).reduce((t,l)=>t+dY(l,y),0);
+const rows=D.empleados.filter(e=>e.estado!="Inactivo"&&(!qq||(e.apellido+" "+e.nombre).toLowerCase().includes(qq))).sort(M.empleados.s).map(e=>{const u=sm(e.id,"Aprobado"),p=sm(e.id,"Pendiente"),r=LIM-u;return`<tr><td>${av(e.id)}${esc(eN(e.id))}</td><td>${u}</td><td>${p||""}</td><td style="font-weight:600;color:${r<0?"var(--rd)":"inherit"}">${r}</td></tr>`}).join("");
+return`<div class="bar"><button class="btn s" data-a="py">◀</button><h3 style="margin:0;flex:1;text-align:center">Días de estudio ${y} (límite de ${LIM} por persona)</h3><button class="btn s" data-a="ny">▶</button></div><div class="w" style="max-height:340px;overflow:auto;margin-bottom:22px"><table><tr><th>Empleado</th><th>Usados (aprobados)</th><th>Pendientes</th><th>Quedan</th></tr>${rows||"<tr><td colspan='4' class='mu'>Sin empleados.</td></tr>"}</table></div><div class="bar"><h3 style="margin:0">Detalle de licencias de estudio</h3></div>`}
+function arr(){const qq=q.toLowerCase(),gs=["Médicos","Enfermeros","Administrativos"],all=D.arreglos.filter(x=>!qq||(eN(x.emp)+" "+(x.texto||"")).toLowerCase().includes(qq));
+$("#app").innerHTML=`<div class="bar"><h2>Arreglo interno</h2><input id="q" placeholder="Buscar persona o texto…" value="${esc(q)}"></div><div class="cards">${gs.map(g=>{const xs=all.filter(x=>x.grupo==g);return`<section class="card"><div class="bar"><h3>${g}</h3><button class="btn" data-a="na" data-g="${g}">+ Agregar</button></div>${xs.map(x=>`<div class="it2"><div><b>${x.emp?esc(eN(x.emp)):"Sin empleado"}</b><p>${esc(x.texto)}</p></div><span style="white-space:nowrap"><button class="btn s" data-a="edk" data-k="arreglos" data-i="${x.id}">Editar</button> <button class="btn s" data-a="dk" data-k="arreglos" data-i="${x.id}">Borrar</button></span></div>`).join("")||`<p class="mu">Todavía no hay arreglos cargados.</p>`}</section>`}).join("")}</div>`;const qi=$("#q");if(qi&&q){qi.focus();qi.setSelectionRange(q.length,q.length)}}
 function render(){$("#nv").innerHTML=Object.keys(L).map(k=>`<button data-t="${k}" class="${k==tab?"on":""}">${L[k]}</button>`).join("");
-if(tab=="inicio")return home();if(tab=="calendario")return cal();
+if(tab=="inicio")return home();if(tab=="calendario")return cal();if(tab=="arreglo")return arr();
 const m=M[tab],isL=col(tab)=="licencias",hs=new Date().toISOString().slice(0,10),rows=[...rowsOf(tab)].sort(m.s).filter(r=>(!q||hay(r,m).includes(q.toLowerCase()))&&Object.entries(fl).every(([k,v])=>!v||fv(r,k)==v));
 let h=`<div class="bar"><h2>${m.t}</h2><input id="q" placeholder="Buscar…" value="${esc(q)}">${canW?`<button class="btn" data-a="new">+ Agregar</button>`:""}</div>`;h+=fbar(m);
+if(tab=="estudio")h+=resEst();
 if(m.src)h+=`<p class="mu">Las filas en celeste son personas que están de licencia hoy.</p>`;
-h+=`<div class="w"><table><tr>${m.c.map(k=>`<th>${ms(tab,k)[1]}</th>`).join("")}<th></th></tr>`;
+h+=`<div class="w"><table><tr>${m.c.map(k=>`<th>${HL[k]||ms(tab,k)[1]}</th>`).join("")}<th></th></tr>`;
 for(const r of rows){const on=m.src&&r.estado=="Aprobado"&&r.desde<=hs&&hs<=r.hasta;
 h+=`<tr class="${on?"hoy":""}">${m.c.map(k=>`<td>${k=="dias"?r.dias:k=="sector"?esc(emp(r.emp)?.sector||""):cell(ms(tab,k),r[k],r)}</td>`).join("")}<td style="white-space:nowrap">${canW?(isL&&r.estado!="Aprobado"?`<button class="btn s" data-a="ok" data-i="${r.id}">Aprobar</button> `:"")+(isL&&r.estado!="Rechazado"?`<button class="btn s" data-a="no" data-i="${r.id}">Rechazar</button> `:"")+`<button class="btn s" data-a="ed" data-i="${r.id}">Editar</button> <button class="btn s" data-a="del" data-i="${r.id}">Borrar</button>`:""}</td></tr>`}
 if(!rows.length)h+=`<tr><td colspan="10" class="mu">Sin registros.</td></tr>`;
@@ -109,25 +126,27 @@ h+=`</div><div class="bar" style="margin-top:30px"><h2>Notas y reuniones</h2><bu
 const ns=[...D.notas].filter(okN).sort(M.notas.s);
 h+=ns.map(x=>`<tr><td>${fd(x.fecha)||"—"}</td><td>${esc(x.titulo)}</td><td>${esc(x.detalle||"")}</td><td style="white-space:nowrap"><button class="btn s" data-a="edk" data-k="notas" data-i="${x.id}">Editar</button> <button class="btn s" data-a="dk" data-k="notas" data-i="${x.id}">Borrar</button></td></tr>`).join("")||`<tr><td colspan="4" class="mu">Todavía no hay notas.</td></tr>`;
 $("#app").innerHTML=h+"</table></div>";const c=$("#cq");if(cq&&c){c.focus();c.setSelectionRange(cq.length,cq.length)}}
-function form(k,id,pre){if(M[k].f.some(f=>f[2]=="emp"&&f[3])&&!D.empleados.length)return alert("Primero cargá al personal en la pestaña Legajos.");const m=M[k],r=id?D[col(k)].find(x=>x.id==id):{...(col(k)=="licencias"?{estado:"Pendiente"}:{}),...(m.pre||{}),...(pre||{})};ed={k,id};
+function form(k,id,pre){if(M[k].f.some(f=>f[2]=="emp"&&f[3])&&!D.empleados.length)return alert("Primero cargá al personal en la pestaña Legajos.");const m=M[k],r=id?D[col(k)].find(x=>x.id==id):{...(col(k)=="licencias"?{estado:"Pendiente"}:{}),...(m.pre||{}),...(pre||{})};ed={k,id,files:{},removed:[]};for(const f of m.f)if(f[2]=="file")ed.files[f[0]]=[...(r[f[0]]||[])];
 $("#m").innerHTML=`<form><b>${id?"Editar":"Nuevo"} · ${m.t}</b>${m.f.map(f=>{const v=r[f[0]]??"",t=f[2];let i;
 if(t=="select"||t=="emp"){const o=t=="emp"?D.empleados.map(e=>[e.id,eN(e.id)]):of(f).map(x=>[x,x]);i=`<select id="f_${f[0]}">${t=="emp"&&!f[3]?"<option value=''>—</option>":""}${o.map(x=>`<option value="${esc(x[0])}" ${x[0]==v?"selected":""}>${esc(x[1])}</option>`).join("")}</select>`}
-else if(t=="file")i=`<input id="f_${f[0]}" type="file" multiple>${(v||[]).length?`<div class="mu">Ya adjuntos: ${v.map(x=>esc(x.n)).join(", ")}</div>`:""}`;
+else if(t=="file")i=`<input id="f_${f[0]}" type="file" multiple><div id="fl_${f[0]}">${filesHtml(f[0])}</div>`;
 else if(t=="area")i=`<textarea id="f_${f[0]}" rows="3">${esc(v)}</textarea>`;
 else i=`<input id="f_${f[0]}" type="${t}" value="${esc(v)}"${t=="text"&&f[4]?' placeholder="Escribí lo que quieras"':""}>${t=="text"&&f[4]&&of(f).length?`<div class="chips">${of(f).slice(0,14).map(x=>`<button type="button" class="chip" data-a="chip" data-k="${f[0]}" data-v="${esc(x)}">${esc(x)}</button>`).join("")}</div>`:""}`;
 return`<label>${f[1]}${f[3]?" *":""}${i}</label>`}).join("")}<div class="bar" style="margin-top:16px">${id?`<button type="button" class="btn s" data-a="fdel" style="color:var(--rd)">Borrar</button>`:""}<span style="flex:1"></span><button type="button" class="btn s" data-a="x">Cancelar</button><button type="button" class="btn" data-a="sv">Guardar</button></div></form>`;$("#m").classList.add("on")}
-async function save(){const{k,id}=ed,m=M[k],d={};
+async function doSave(){const{k,id}=ed,m=M[k],d={};
 for(const f of m.f){const el=$("#f_"+f[0]);
-if(f[2]=="file"){const old=(id&&D[col(k)].find(x=>x.id==id)?.[f[0]])||[],nu=[];if(el.files.length&&!assets)return alert("No tenés permiso para subir archivos.");
+if(f[2]=="file"){const old=ed.files[f[0]]||[],nu=[];if(el.files.length&&!assets)return alert("No tenés permiso para subir archivos.");
 try{for(const fl of el.files){const u=await assets.upload(fl);nu.push({id:u.id,n:fl.name})}}catch(e){return alert("Error al subir archivo: "+(e.message||e.code))}d[f[0]]=[...old,...nu]}
 else{let v=el.value;if(f[2]=="number")v=v===""?null:Number(v);if(f[3]&&(v===""||v==null))return alert("Falta completar: "+f[1]);d[f[0]]=v}}
 if(col(k)=="licencias"){if(!d.tipo&&!d.articulo&&!d.codigo)return alert("Escribí el código, el N° de artículo o el tipo de licencia.");if(!d.hasta)d.hasta=d.desde;if(d.hasta<d.desde)return alert("'Hasta' no puede ser anterior a 'Desde'.");d.dias=days(d.desde,d.hasta)}
-try{id?await db.collection(col(k)).doc(id).set(d):await db.collection(col(k)).add(d);$("#m").classList.remove("on");render()}catch(e){alert("No se pudo guardar: "+(e.message||e.code))}}
-document.addEventListener("click",async e=>{const fa=e.target.closest("[data-f]");if(fa){e.preventDefault();const{data}=await sb.storage.from("adjuntos").createSignedUrl(fa.dataset.f,120);if(data)window.open(data.signedUrl,"_blank");return}
+try{id?await db.collection(col(k)).doc(id).set(d):await db.collection(col(k)).add(d);$("#m").classList.remove("on");render();if(ed.removed.length)sb.storage.from("adjuntos").remove(ed.removed).catch(()=>{})}catch(e){alert("No se pudo guardar: "+(e.message||e.code))}}
+async function save(){const bt=document.querySelector('#m [data-a="sv"]');if(bt){bt.disabled=true;bt.textContent="Guardando…"}try{await doSave()}finally{if(bt){bt.disabled=false;bt.textContent="Guardar"}}}
+document.addEventListener("click",async e=>{const fa=e.target.closest("[data-f]");if(fa){e.preventDefault();const w=window.open("about:blank","_blank");const{data}=await sb.storage.from("adjuntos").createSignedUrl(fa.dataset.f,300);if(data&&w)w.location.href=data.signedUrl;else{if(w)w.close();alert("No se pudo abrir el archivo.")}return}
 const b=e.target.closest("[data-a],[data-t]");if(!b)return;const a=b.dataset.a,i=b.dataset.i;
 if(b.dataset.t){tab=b.dataset.t;q="";fl={};return render()}
 if(a=="new")form(tab);else if(a=="ed")form(tab,i);else if(a=="edk")form(b.dataset.k,i);else if(a=="nd")form("notas",null,{fecha:b.dataset.d});else if(a=="nn")form("notas");
-else if(a=="x"){$("#m").classList.remove("on");render()}else if(a=="sv")save();
+else if(a=="py"){anio--;render()}else if(a=="ny"){anio++;render()}else if(a=="na")form("arreglos",null,{grupo:b.dataset.g});
+else if(a=="rmf"){const ar=ed.files[b.dataset.k],x=ar.splice(+b.dataset.n,1)[0];if(x)ed.removed.push(x.id);$("#fl_"+b.dataset.k).innerHTML=filesHtml(b.dataset.k)}else if(a=="x"){$("#m").classList.remove("on");render()}else if(a=="sv")save();
 else if(a=="fdel"){if(confirm("¿Borrar este registro?"))try{await db.collection(col(ed.k)).doc(ed.id).delete();$("#m").classList.remove("on");render()}catch(x){alert(x.message)}}
 else if(a=="dk"){if(confirm("¿Borrar este registro?"))db.collection(b.dataset.k).doc(i).delete().catch(x=>alert(x.message))}
 else if(a=="pm"){mes=new Date(mes.getFullYear(),mes.getMonth()-1,1);cal()}else if(a=="nm"){mes=new Date(mes.getFullYear(),mes.getMonth()+1,1);cal()}
